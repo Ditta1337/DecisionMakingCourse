@@ -1,4 +1,4 @@
-package com.polscydecydenci.decider.decider;
+package com.polscydecydenci.decider.model;
 
 import lombok.Getter;
 import lombok.Setter;
