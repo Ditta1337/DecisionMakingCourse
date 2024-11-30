@@ -1,4 +1,4 @@
-package com.polscydecydenci.decider.decider;
+package com.polscydecydenci.decider.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class DeciderQuestion {
     private String category;
-    private double weight;
     private List<Pair> pairs;
 }
