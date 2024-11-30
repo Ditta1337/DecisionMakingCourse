@@ -7,10 +7,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.8",
+    "classnames": "^2.5.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-dropzone": "^14.3.5",
+    "react-popper": "^2.3.0",
     "react-router-dom": "^7.0.1",
     "react-scripts": "5.0.1",
+    "sass": "^1.81.0",
     "soss": "^0.1.3",
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.1"
@@ -41,7 +45,6 @@
   },
   "devDependencies": {
     "css-loader": "^7.1.2",
-    "node-sass": "^7.0.3",
     "postcss-loader": "^8.1.1",
     "resolve-url-loader": "^5.0.0",
     "sass-loader": "^16.0.3"

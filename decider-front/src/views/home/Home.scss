@@ -1,3 +1,5 @@
+@import "../../_variables.scss";
+
 .home {
     display: flex;
     flex-direction: column;
@@ -6,13 +8,20 @@
     align-content: center;
     text-align: center;
 
+    .title {
+        color: $button-primary;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    }
+
     .header {
         display: flex;
         flex-direction: row;
         align-content: center;
+        justify-content: center;
+
 
         h1 {
-            font-size: 3rem;
+            font-size: 4rem;
         }
 
         .logo {
@@ -24,5 +33,22 @@
 
     .description {
         max-width: 70%;
+    }
+
+    .adder {
+        width: 100%;
+        max-width: 70%;
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .decide {
+        margin-top: 2rem;
+
+        button {
+            font-size: 2rem;
+        }
     }
 }
