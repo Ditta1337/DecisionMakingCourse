@@ -10,11 +10,12 @@ const FileImporter = () => {
     const [fileName, setFileName] = useState(null);
     const [isParsed, setIsParsed] = useState(null);
 
-    const storeActions = useStore(state => state.actions);
+    const store = useStore();
 
     const onDrop = useCallback((acceptedFiles) => {
         setFileName(null);
         setIsParsed(null);
+        console.log("siema");
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
             if (file.type === "application/json") {
@@ -22,13 +23,16 @@ const FileImporter = () => {
                 reader.onload = () => {
                     try {
                         const fileContent = JSON.parse(reader.result);
+
+                        console.log("fileContent", fileContent);
+
                         const hasRequiredKeys = requiredKeys.every(key => key in fileContent);
                         if (!hasRequiredKeys) {
                             throw new Error("Missing required keys");
                         }
 
-                        storeActions.setCategories(fileContent.categories);
-                        storeActions.setItems(fileContent.items);
+                        store.setCategories(fileContent.categories);
+                        store.setItems(fileContent.items);
 
                         setFileName(file.name);
                         setIsParsed(true);

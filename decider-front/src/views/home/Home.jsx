@@ -11,22 +11,22 @@ import {BACKEND_URL} from "../../consts";
 
 const Home = () => {
     const navigate = useNavigate();
-    const storeActions = useStore(state => state.actions);
-    const storeState = useStore(state => state.state);
+
+    const store = useStore();
 
     const handleDecide = () => {
-        if (storeState.categories.length < 2) {
+        if (store.categories.length < 2) {
             alert("Please add at least two categories");
             return;
         }
-        if (storeState.items.length < 2) {
+        if (store.items.length < 2) {
             alert("Please add at least two items to compare");
             return;
         }
 
         axios.post(`${BACKEND_URL}/decider/configuration`, {
-            categories: storeState.categories,
-            items: storeState.items
+            categories: store.categories,
+            items: store.items
         }).then(response => {
             const category_pairs = response.data.category_questions;
             const item_pairs = response.data.item_questions;
@@ -36,8 +36,10 @@ const Home = () => {
                 return;
             }
 
-            storeActions.setCategoryPairs(category_pairs);
-            storeActions.setItemPairs(item_pairs);
+            store.setCategoryPairs(category_pairs);
+            store.setItemPairs(item_pairs);
+            store.resetCurrentCategoryPair();
+            store.resetCurrentItemPair();
 
             navigate("/category-decider");
         }).catch(error => {
@@ -57,10 +59,10 @@ const Home = () => {
             </h2>
             <FileImporter/>
             <div className="adder">
-                <ContentAdder objectType="Categories" objects={storeState.categories}
-                              addObject={storeActions.addCategory} removeObject={storeActions.deleteCategory}/>
-                <ContentAdder objectType="Items" objects={storeState.items} addObject={storeActions.addItem}
-                              removeObject={storeActions.deleteItem}/>
+                <ContentAdder objectType="Categories" objects={store.categories}
+                              addObject={store.addCategory} removeObject={store.deleteCategory}/>
+                <ContentAdder objectType="Items" objects={store.items} addObject={store.addItem}
+                              removeObject={store.deleteItem}/>
             </div>
             <FileSaver/>
             <div className="decide">

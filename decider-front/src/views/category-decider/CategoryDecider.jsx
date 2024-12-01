@@ -2,15 +2,28 @@ import React, {useState} from "react";
 import "./CategoryDecider.scss";
 import {useStore} from "../../store";
 import Comparator from "../../components/comparator/Comparator";
+import ProgressBar from "../../components/progress-bar/ProgressBar";
 
 const CategoryDecider = () => {
-    const storeState = useStore(state => state.state);
-    const [currentPairNumber, setCurrentPairNumber] = useState(0);
-    const categoryPairs = storeState.category_pairs;
+    const store = useStore();
+    const [currentPairNumber, setCurrentPairNumber] = useState(store.currentCategoryPair);
+    const categoryPairs = store.categoryPairs;
+
     return (
         <div className="category-decider">
-            <Comparator pair={categoryPairs[currentPairNumber]} pairNumber={currentPairNumber}
-                        numberOfPairs={categoryPairs.length} setPairNumber={setCurrentPairNumber}/>
+            <ProgressBar progress={currentPairNumber} total={categoryPairs.length - 1}/>
+            <Comparator pair={categoryPairs[currentPairNumber]}
+                        pairNumber={currentPairNumber}
+                        numberOfPairs={categoryPairs.length}
+                        updatePair={store.updateCategoryPair}
+                        setPairNumber={setCurrentPairNumber}
+                        nextDestination="/item-decider"
+                        nextDestinationMessage="Continue"
+                        previousDestination="/"
+                        previousDestinationMessage="Home"
+                        incrementPage={store.incrementCurrentCategoryPair}
+                        decrementPage={store.decrementCurrentCategoryPair}
+            />
         </div>
     );
 }

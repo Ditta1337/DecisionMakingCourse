@@ -1,17 +1,36 @@
+@import "../../_variables.scss";
+
 .comparator {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    background-color: $background-color;
+
+    .category {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        margin-top: 2rem;
+
+        .category-name {
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+    }
 
     .pair {
-        width: 70%;
+        width: 60%;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        font-size: 2rem;
+        font-size: 3rem;
+        margin-top: 2rem;
 
         img {
             width: 100px;
@@ -46,5 +65,43 @@
         align-items: center;
         justify-content: space-between;
         margin-top: 2rem;
+    }
+
+    .preference {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-top: 2rem;
+
+        .preference-weight {
+            font-weight: bold;
+        }
+    }
+
+    &.fade-out {
+        animation: fadeOut 0.5s forwards;
+    }
+
+    &.fade-in {
+        animation: fadeIn 0.5s forwards;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
