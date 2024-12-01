@@ -1,14 +1,9 @@
-import React, {useState, useRef} from "react";
-import {usePopper} from "react-popper";
+import React, { useState, useRef } from "react";
 import "./Helper.scss";
 
 const Helper = () => {
     const [showPopper, setShowPopper] = useState(false);
     const helperRef = useRef(null);
-    const popperRef = useRef(null);
-    const {styles, attributes} = usePopper(helperRef.current, popperRef.current, {
-        placement: "top"
-    });
 
     return (
         <div>
@@ -21,7 +16,7 @@ const Helper = () => {
                 ?
             </div>
             {showPopper && (
-                <div ref={popperRef} style={styles.popper} {...attributes.popper}>
+                <div className="popper">
                     <div className="popper-content">
                         Example JSON file:
                         <pre>
