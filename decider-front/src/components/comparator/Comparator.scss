@@ -1,0 +1,50 @@
+.comparator {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .pair {
+        width: 70%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 2rem;
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+    }
+
+    .slider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 70%;
+        margin-top: 2rem;
+        height: 20px;
+
+        input[type=range] {
+            width: 100%;
+            height: 20px;
+            -webkit-appearance: none;
+            background: white;
+            border-radius: 10px;
+            outline: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+    }
+
+    .buttons {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+}

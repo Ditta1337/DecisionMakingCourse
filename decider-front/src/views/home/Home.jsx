@@ -28,16 +28,16 @@ const Home = () => {
             categories: storeState.categories,
             items: storeState.items
         }).then(response => {
-            const category_pairs = response.data.category_pairs;
-            const item_pairs = response.data.item_pairs;
+            const category_pairs = response.data.category_questions;
+            const item_pairs = response.data.item_questions;
 
             if (!category_pairs?.length || !item_pairs?.length) {
                 console.error("Invalid response from server");
                 return;
             }
 
-            storeActions.setCategoryPairs(response.data.category_pairs);
-            storeActions.setItemPairs(response.data.item_pairs);
+            storeActions.setCategoryPairs(category_pairs);
+            storeActions.setItemPairs(item_pairs);
 
             navigate("/category-decider");
         }).catch(error => {
