@@ -1,10 +1,13 @@
 package com.polscydecydenci.decider.decider;
 
+import com.polscydecydenci.decider.model.AlgorithmOutput;
 import com.polscydecydenci.decider.model.DeciderConfiguration;
 import com.polscydecydenci.decider.model.DeciderQuestionnaire;
-import com.polscydecydenci.decider.model.AlgorithmInput;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +19,7 @@ public class DeciderController {
         return deciderService.createQuestionList(deciderConfiguration);
     }
     @PostMapping("/answers")
-    public AlgorithmInput receiveAndReturnDeciderAnswers(@RequestBody DeciderQuestionnaire deciderQuestionnaire){
+    public AlgorithmOutput receiveAndReturnDeciderAnswers(@RequestBody DeciderQuestionnaire deciderQuestionnaire){
         return deciderService.checkAnswersList(deciderQuestionnaire);
     }
 }
