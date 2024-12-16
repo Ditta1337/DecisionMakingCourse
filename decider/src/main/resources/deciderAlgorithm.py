@@ -77,7 +77,7 @@ def calculate_final(matrix, criterion):
         sum = 0
         for crit in range(m):
             sum += criterion[crit] * X[crit, alt]
-        res.append(sum)
+        res.append(sum.item())
     return res
 
 
@@ -100,7 +100,7 @@ def calculate_consistency_ratio(matrix):
     RI = RI_values.get(n, 1.49)
 
     # CR
-    CR = CI / RI
+    CR = (CI / RI).item()
 
     return CR
 
@@ -113,8 +113,8 @@ def find_worst_pairs(matrix, normalized_matrix):
     for i in range(n):
         for j in range(n):
             if i > j:
-                inconsistency = [abs((normalized_matrix[i] / normalized_matrix[j]) - X[i, j])]
-                inconsistency2 = [abs((normalized_matrix[j] / normalized_matrix[i]) - X[j, i])]
+                inconsistency = [abs((normalized_matrix[i] / normalized_matrix[j]) - X[i, j]).item()]
+                inconsistency2 = [abs((normalized_matrix[j] / normalized_matrix[i]) - X[j, i]).item()]
                 # Zapisujemy parę wraz z sumaryczną niespójnością
                 inconsistencies.append([[i, j], max(inconsistency, inconsistency2)])
 

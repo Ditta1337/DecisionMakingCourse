@@ -49,7 +49,6 @@ public class DeciderService {
         AlgorithmInput algorithmInput = new AlgorithmInput(items.keySet().stream().toList(),categories.keySet().stream().toList(), categoryMatrix ,itemMatrices);
 
         JSONObject jsonObject = executePython(algorithmInput.toJson());
-
         AlgorithmOutput algorithmOutput = new AlgorithmOutput();
 
         JSONArray jsonArray = jsonObject.getJSONArray("final_alternatives_vector");
@@ -99,11 +98,15 @@ public class DeciderService {
             File file = resource.getFile();
 
             ProcessBuilder processBuilder = new ProcessBuilder("python", file.getAbsolutePath(), input);
+
+            System.out.println(processBuilder.command());
+            System.out.println(processBuilder);
+            processBuilder.environment().putAll(System.getenv());
             Process process = processBuilder.start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder output = new StringBuilder();
-            String line;
+            String line = "jd";
             while ((line = reader.readLine()) != null) {
                 output.append(line);
             }

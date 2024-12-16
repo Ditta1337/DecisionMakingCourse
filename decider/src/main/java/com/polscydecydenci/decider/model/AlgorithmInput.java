@@ -19,7 +19,7 @@ public class AlgorithmInput {
     public String toJson(){
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(this).replace("\"", "\\\"");  // Converts the object to a JSON string
+            return objectMapper.writeValueAsString(this);  // Converts the object to a JSON string
         } catch (Exception e) {
             e.printStackTrace();
             return null;

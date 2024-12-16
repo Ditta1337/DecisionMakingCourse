@@ -32,6 +32,7 @@ const Comparator = ({
 
     const handleNext = () => {
         setAnimationClass("fade-out");
+        mapSliderValueToDecider(sliderValue);
         setTimeout(() => {
             setPairNumber(pairNumber + 1);
             incrementPage();
@@ -42,6 +43,7 @@ const Comparator = ({
 
     const handlePrevious = () => {
         setAnimationClass("fade-out");
+
         setTimeout(() => {
             setPairNumber(pairNumber - 1);
             decrementPage();
@@ -53,6 +55,7 @@ const Comparator = ({
     useEffect(() => {
         if (pair.decider === 0.0) {
             pair.decider = 1;
+            updatePair(pair);
         }
         setSliderValue(mapDeciderValueToSlider(pair.decider));
     }, [pair]);
@@ -61,7 +64,7 @@ const Comparator = ({
         const updatedPair = {
             ...pair,
             decider: mapSliderValueToDecider(sliderValue)
-        }
+        };
         updatePair(updatedPair);
     }, [sliderValue]);
 

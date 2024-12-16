@@ -7,7 +7,12 @@ import {BACKEND_URL} from "../../consts";
 const Summary = () => {
     const store = useStore();
 
+
     useEffect(() => {
+        console.log({
+            item_questions: store.itemPairs,
+            category_questions: store.categoryPairs,
+        })
         axios.post(BACKEND_URL + "/decider/answers", {
             item_questions: store.itemPairs,
             category_questions: store.categoryPairs,
@@ -21,8 +26,12 @@ const Summary = () => {
 
     return (
         <div className="summary">
-            <h1>Summary</h1>
-            <p>Summary content</p>
+            <div className="header">
+                <div className="title">Summary</div>
+            </div>
+            <div className="results">
+
+            </div>
         </div>
     );
 }
