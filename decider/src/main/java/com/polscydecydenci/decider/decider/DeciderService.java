@@ -1,8 +1,14 @@
 package com.polscydecydenci.decider.decider;
 
 import com.polscydecydenci.decider.model.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +19,6 @@ public class DeciderService {
         List<String> categories = configuration.getCategories();
         int itemsSize = items.size();
         int categoriesSize = categories.size();
-        if(itemsSize > 10 || categoriesSize > 10){
-            throw new IllegalArgumentException();
-        }
         List<DeciderQuestion> itemQuestions = new ArrayList<>();
         List<Pair> pairList = new ArrayList<>();
         for(int i = 0;i < itemsSize - 1;i++){
@@ -34,7 +37,7 @@ public class DeciderService {
         }
         return new DeciderQuestionnaire(itemQuestions, categoryQuestions);
     }
-    public AlgorithmInput checkAnswersList(DeciderQuestionnaire deciderQuestionnaire) {
+    public AlgorithmOutput checkAnswersList(DeciderQuestionnaire deciderQuestionnaire) {
         HashMap<String, Integer> items = makeNameToIntegerMap(deciderQuestionnaire.getItemQuestions().getFirst().getPairs());
         HashMap<String, Integer> categories = makeNameToIntegerMap(deciderQuestionnaire.getCategoryQuestions());
         double[][][] itemMatrices = new double[categories.size()][items.size()][items.size()];
@@ -43,7 +46,27 @@ public class DeciderService {
             itemMatrices[i] = makeComparisonMatrix(items, question.getPairs(), items.size());
         }
         double[][] categoryMatrix = makeComparisonMatrix(categories, deciderQuestionnaire.getCategoryQuestions(), categories.size());
-        return new AlgorithmInput(items.keySet().stream().toList(),categories.keySet().stream().toList(), categoryMatrix ,itemMatrices);
+        AlgorithmInput algorithmInput = new AlgorithmInput(items.keySet().stream().toList(),categories.keySet().stream().toList(), categoryMatrix ,itemMatrices);
+
+        JSONObject jsonObject = executePython(algorithmInput.toJson());
+
+        AlgorithmOutput algorithmOutput = new AlgorithmOutput();
+
+        JSONArray jsonArray = jsonObject.getJSONArray("final_alternatives_vector");
+        ArrayList<Double> alternativesVector = new ArrayList<>();
+        for(int i = 0;i < jsonArray.length(); i++)alternativesVector.add(jsonArray.getDouble(i));
+        algorithmOutput.setFinalAlternativesVector(alternativesVector);
+        JSONObject errors = jsonObject.getJSONObject("errors");
+        QuestionSorter.sortQuestionsAndValidateRatios(errors, algorithmOutput, items, categories);
+//        for(DeciderQuestion dq: algorithmOutput.getItemQuestions()){
+//            System.out.println(dq.getCategory());
+//            for(Pair pair: dq.getPairs()){
+//                System.out.println(pair.getItem1());
+//                System.out.println(pair.getItem2());
+//                System.out.println(pair.getDecider());
+//            }
+//        }
+        return algorithmOutput;
     }
     private HashMap<String, Integer> makeNameToIntegerMap(List<Pair> pairs){
         HashMap<String,Integer> map = new HashMap<>();
@@ -69,5 +92,26 @@ public class DeciderService {
             matrix[item2Number][item1Number] = 1/pair.getDecider();
         }
         return matrix;
+    }
+    private JSONObject executePython(String input) {
+        try {
+            ClassPathResource resource = new ClassPathResource("deciderAlgorithm.py");
+            File file = resource.getFile();
+
+            ProcessBuilder processBuilder = new ProcessBuilder("python", file.getAbsolutePath(), input);
+            Process process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            return new JSONObject(output.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
