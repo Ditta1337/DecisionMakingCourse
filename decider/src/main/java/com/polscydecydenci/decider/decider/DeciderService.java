@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
 @Service
 public class DeciderService {
     public DeciderQuestionnaire createQuestionList(DeciderConfiguration configuration) {
@@ -51,10 +53,12 @@ public class DeciderService {
         JSONObject jsonObject = executePython(algorithmInput.toJson());
         AlgorithmOutput algorithmOutput = new AlgorithmOutput();
 
-        JSONArray jsonArray = jsonObject.getJSONArray("final_alternatives_vector");
-        ArrayList<Double> alternativesVector = new ArrayList<>();
-        for(int i = 0;i < jsonArray.length(); i++)alternativesVector.add(jsonArray.getDouble(i));
-        algorithmOutput.setFinalAlternativesVector(alternativesVector);
+        JSONArray alternativesVector = jsonObject.getJSONArray("final_alternatives_vector");
+        List<String> alternativesRanking = items.keySet().stream().toList();
+        alternativesRanking.sort((item1, item2) -> {
+            return Double.compare(alternativesVector.getDouble(items.get(item2)), alternativesVector.getDouble(items.get(item1)));
+        });
+        algorithmOutput.setAlternativesRanking(alternativesRanking);
         JSONObject errors = jsonObject.getJSONObject("errors");
         QuestionSorter.sortQuestionsAndValidateRatios(errors, algorithmOutput, items, categories);
 //        for(DeciderQuestion dq: algorithmOutput.getItemQuestions()){
@@ -79,6 +83,15 @@ public class DeciderService {
             }
         }
         return map;
+    }
+
+    private String findKeyByValue(HashMap<String, Integer> map, Integer value){
+        for(String key: map.keySet()){
+            if(Objects.equals(map.get(key), value)){
+                return key;
+            }
+        }
+        return null;
     }
     private double[][] makeComparisonMatrix(HashMap<String, Integer> map, List<Pair> pairs, int size){
         double[][] matrix = new double[size][size];

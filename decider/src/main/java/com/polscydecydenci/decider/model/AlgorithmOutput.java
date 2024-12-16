@@ -11,7 +11,7 @@ import java.util.List;
 public class AlgorithmOutput {
     private List<DeciderQuestion> itemQuestions; //item questions to correct
     private List<Pair> categoryQuestions; //category questions to correct
-    private List<Double> finalAlternativesVector; //items ratings
+    private List<String> alternativesRanking; //items ratings
     private double categoryMatrixConsistencyRatio;
     private List<CategoryAndConsistency> itemsMatrixConsistencyRatio;
 }
