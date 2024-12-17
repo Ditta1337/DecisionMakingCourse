@@ -3,6 +3,8 @@
 This guide will walk you through the process of running the frontend and backend of the Decydent web application using Docker.
 Source code is available at [GitHub](https://github.com/Ditta1337/DecisionMakingCourse).
 
+## Methodology
+The AHP algorithm involves hierarchical modeling of a decision-making problem and conducting pairwise comparisons of elements using Saaty's scale. Priority vectors and the Consistency Ratio Index (CRI) are then calculated to assess the consistency of the decision-maker's evaluations. Subsequently, the consistency index is computed to determine whether the pairwise comparison matrix is sufficiently consistent. If its value exceeds an acceptable level, verification and correction of the decision-maker's judgments are necessary. However, if the value falls within the acceptable range, the results can be considered satisfactory. 
 
 ## Prerequisites
 
@@ -109,7 +111,7 @@ To stop the running application and remove the containers, use the following com
 docker-compose down
 ```
 
-### 9. Authors
+## Authors
 - Maciej Malinowkski
 - Szymon Wojturski
 - Artur Dwornik
