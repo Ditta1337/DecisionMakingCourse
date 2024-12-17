@@ -4,12 +4,12 @@ import Button from "../button/Button";
 import "./FileSaver.scss";
 
 const FileSaver = () => {
-    const state = useStore(state => state.state);
+    const store = useStore();
 
     const handleExport = () => {
         const data = {
-            categories: state.categories,
-            items: state.items
+            categories: store.categories,
+            items: store.items
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
         const url = URL.createObjectURL(blob);

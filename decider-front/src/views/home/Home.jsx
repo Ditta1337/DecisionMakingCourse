@@ -11,7 +11,6 @@ import {BACKEND_URL} from "../../consts";
 
 const Home = () => {
     const navigate = useNavigate();
-
     const store = useStore();
 
     const handleDecide = () => {
