@@ -8,6 +8,8 @@ export const useStore = create(
             items: [],
             categoryPairs: [],
             itemPairs: [],
+            redoCategoryPairs: [],
+            redoItemPairs: [],
             currentCategoryPair: 0,
             currentItemPair: 0,
             setCategories: (categories) => set({ categories }),
@@ -22,11 +24,15 @@ export const useStore = create(
             deleteItem: (item) => set(state => ({
                 items: state.items.filter(it => it !== item)
             })),
-            deleteState: () => set({ categories: [], items: [] }),
             setCategoryPairs: (categoryPairs) => set({ categoryPairs }),
             setItemPairs: (itemPairs) => set({ itemPairs }),
+            setRedoCategoryPairs: (redoCategoryPairs) => set({ redoCategoryPairs }),
+            setRedoItemPairs: (redoItemPairs) => set({ redoItemPairs }),
             updateCategoryPair: (category_pair) => set(state => ({
                 categoryPairs: state.categoryPairs.map(pair =>
+                    pair.item1 === category_pair.item1 && pair.item2 === category_pair.item2 ?
+                        category_pair : pair),
+                redoCategoryPairs: state.redoCategoryPairs.map(pair =>
                     pair.item1 === category_pair.item1 && pair.item2 === category_pair.item2 ?
                         category_pair : pair)
             })),
@@ -34,9 +40,15 @@ export const useStore = create(
                 itemPairs: state.itemPairs.map(pair =>
                     pair.category === item_pair.category ?
                         { ...pair, pairs: pair.pairs.map(p =>
-                            p.item1 === item_pair.item1 && p.item2 === item_pair.item2 ?
-                                item_pair : p) } : pair)
+                                p.item1 === item_pair.item1 && p.item2 === item_pair.item2 ?
+                                    item_pair : p) } : pair),
+                redoItemPairs: state.redoItemPairs.map(pair =>
+                    pair.category === item_pair.category ?
+                        { ...pair, pairs: pair.pairs.map(p =>
+                                p.item1 === item_pair.item1 && p.item2 === item_pair.item2 ?
+                                    item_pair : p) } : pair)
             })),
+
             incrementCurrentCategoryPair: () => set(state => ({
                 currentCategoryPair: state.currentCategoryPair + 1
             })),

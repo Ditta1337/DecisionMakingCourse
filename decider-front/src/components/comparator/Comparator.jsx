@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./Comparator.scss";
 import Button from "../button/Button";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useStore} from "../../store";
 
 const Comparator = ({
                         pair,
@@ -17,6 +18,7 @@ const Comparator = ({
                         decrementPage
                     }) => {
     const navigate = useNavigate();
+    const store = useStore();
     const [animationClass, setAnimationClass] = useState("");
 
     const mapSliderValueToDecider = (value) => {
@@ -70,7 +72,8 @@ const Comparator = ({
 
     return (
         <div className={`comparator ${animationClass}`}>
-            {pair.category && <div className="category">Category: <span className="category-name">{pair.category}</span></div>}
+            {pair.category &&
+                <div className="category">Category: <span className="category-name">{pair.category}</span></div>}
             <div className="pair">
                 <div className="item">{pair.item1}</div>
                 <img src={process.env.PUBLIC_URL + "/images/vs.png"} alt="vs"/>
@@ -91,7 +94,8 @@ const Comparator = ({
                 {sliderValue === 0 ? (
                     <div>Equal preference</div>
                 ) : (
-                    <div>{pair.item1} is <span className="preference-weight">{mapSliderValueToDecider(sliderValue)}</span> times more preferred
+                    <div>{pair.item1} is <span
+                        className="preference-weight">{mapSliderValueToDecider(sliderValue)}</span> times more preferred
                         than {pair.item2}</div>
                 )}
             </div>

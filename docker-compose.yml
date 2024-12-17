@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./decider
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    volumes:
+      - ./backend/src/main/resources:/app/resources
+    depends_on:
+      - frontend
+
+  frontend:
+    build:
+      context: ./decider-front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"

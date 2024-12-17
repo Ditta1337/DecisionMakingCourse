@@ -15,7 +15,6 @@ const FileImporter = () => {
     const onDrop = useCallback((acceptedFiles) => {
         setFileName(null);
         setIsParsed(null);
-        console.log("siema");
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
             if (file.type === "application/json") {
@@ -23,8 +22,6 @@ const FileImporter = () => {
                 reader.onload = () => {
                     try {
                         const fileContent = JSON.parse(reader.result);
-
-                        console.log("fileContent", fileContent);
 
                         const hasRequiredKeys = requiredKeys.every(key => key in fileContent);
                         if (!hasRequiredKeys) {

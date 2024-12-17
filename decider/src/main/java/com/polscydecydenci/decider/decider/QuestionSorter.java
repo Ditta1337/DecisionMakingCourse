@@ -78,10 +78,10 @@ public class QuestionSorter {
             if(questionsToSort.size() == i)break;
             Question currentQuestion = questionsToSort.get(i);
             if(currentQuestion.categoryIndex == -1){
-                categoryQuestions.add(new Pair(findKeyByValue(categories, currentQuestion.item1Index), findKeyByValue(categories, currentQuestion.item2Index), 0));
+                categoryQuestions.add(new Pair(findKeyByValue(categories, currentQuestion.item1Index), findKeyByValue(categories, currentQuestion.item2Index), 1));
             }
             else if(currentQuestion.consistencyRatio > 0.1){
-                itemQuestions.get(currentQuestion.categoryIndex).getPairs().add(new Pair(findKeyByValue(items, currentQuestion.item1Index), findKeyByValue(items, currentQuestion.item2Index), 0));
+                itemQuestions.get(currentQuestion.categoryIndex).getPairs().add(new Pair(findKeyByValue(items, currentQuestion.item1Index), findKeyByValue(items, currentQuestion.item2Index), 1));
             }
         }
         algorithmOutput.setItemQuestions(itemQuestions);

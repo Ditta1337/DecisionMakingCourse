@@ -54,7 +54,7 @@ public class DeciderService {
         AlgorithmOutput algorithmOutput = new AlgorithmOutput();
 
         JSONArray alternativesVector = jsonObject.getJSONArray("final_alternatives_vector");
-        List<String> alternativesRanking = items.keySet().stream().toList();
+        ArrayList<String> alternativesRanking = new ArrayList<>(items.keySet());
         alternativesRanking.sort((item1, item2) -> {
             return Double.compare(alternativesVector.getDouble(items.get(item2)), alternativesVector.getDouble(items.get(item1)));
         });
@@ -107,8 +107,7 @@ public class DeciderService {
     }
     private JSONObject executePython(String input) {
         try {
-            ClassPathResource resource = new ClassPathResource("deciderAlgorithm.py");
-            File file = resource.getFile();
+            File file = new File("/app/scripts/deciderAlgorithm.py");
 
             ProcessBuilder processBuilder = new ProcessBuilder("python", file.getAbsolutePath(), input);
 
