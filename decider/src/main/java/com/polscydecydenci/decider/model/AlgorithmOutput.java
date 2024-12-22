@@ -1,9 +1,6 @@
 package com.polscydecydenci.decider.model;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONArray;
 
 import java.util.List;
 @Setter

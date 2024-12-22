@@ -42,33 +42,11 @@ public class DeciderService {
     public AlgorithmOutput checkAnswersList(DeciderQuestionnaire deciderQuestionnaire) {
         HashMap<String, Integer> items = makeNameToIntegerMap(deciderQuestionnaire.getItemQuestions().getFirst().getPairs());
         HashMap<String, Integer> categories = makeNameToIntegerMap(deciderQuestionnaire.getCategoryQuestions());
-        double[][][] itemMatrices = new double[categories.size()][items.size()][items.size()];
-        for(int i = 0;i < categories.size();i++){
-            DeciderQuestion question = deciderQuestionnaire.getItemQuestions().get(i);
-            itemMatrices[i] = makeComparisonMatrix(items, question.getPairs(), items.size());
-        }
-        double[][] categoryMatrix = makeComparisonMatrix(categories, deciderQuestionnaire.getCategoryQuestions(), categories.size());
-        AlgorithmInput algorithmInput = new AlgorithmInput(items.keySet().stream().toList(),categories.keySet().stream().toList(), categoryMatrix ,itemMatrices);
+        AlgorithmInput algorithmInput = makeAlgorithmInput(items, categories, deciderQuestionnaire);
 
-        JSONObject jsonObject = executePython(algorithmInput.toJson());
+        JSONObject jsonAlgorithmOutput = executePython(algorithmInput.toJson());
         AlgorithmOutput algorithmOutput = new AlgorithmOutput();
-
-        JSONArray alternativesVector = jsonObject.getJSONArray("final_alternatives_vector");
-        ArrayList<String> alternativesRanking = new ArrayList<>(items.keySet());
-        alternativesRanking.sort((item1, item2) -> {
-            return Double.compare(alternativesVector.getDouble(items.get(item2)), alternativesVector.getDouble(items.get(item1)));
-        });
-        algorithmOutput.setAlternativesRanking(alternativesRanking);
-        JSONObject errors = jsonObject.getJSONObject("errors");
-        QuestionSorter.sortQuestionsAndValidateRatios(errors, algorithmOutput, items, categories);
-//        for(DeciderQuestion dq: algorithmOutput.getItemQuestions()){
-//            System.out.println(dq.getCategory());
-//            for(Pair pair: dq.getPairs()){
-//                System.out.println(pair.getItem1());
-//                System.out.println(pair.getItem2());
-//                System.out.println(pair.getDecider());
-//            }
-//        }
+        AlgorithmOutputFormatter.fillAlgoritmOutput(algorithmOutput, jsonAlgorithmOutput, items, categories);
         return algorithmOutput;
     }
     private HashMap<String, Integer> makeNameToIntegerMap(List<Pair> pairs){
@@ -84,15 +62,6 @@ public class DeciderService {
         }
         return map;
     }
-
-    private String findKeyByValue(HashMap<String, Integer> map, Integer value){
-        for(String key: map.keySet()){
-            if(Objects.equals(map.get(key), value)){
-                return key;
-            }
-        }
-        return null;
-    }
     private double[][] makeComparisonMatrix(HashMap<String, Integer> map, List<Pair> pairs, int size){
         double[][] matrix = new double[size][size];
         for(int i = 0;i < size;i++){
@@ -104,6 +73,15 @@ public class DeciderService {
             matrix[item2Number][item1Number] = 1/pair.getDecider();
         }
         return matrix;
+    }
+    private AlgorithmInput makeAlgorithmInput(HashMap<String, Integer> items, HashMap<String, Integer> categories, DeciderQuestionnaire deciderQuestionnaire){
+        double[][][] itemMatrices = new double[categories.size()][items.size()][items.size()];
+        for(int i = 0;i < categories.size();i++){
+            DeciderQuestion question = deciderQuestionnaire.getItemQuestions().get(i);
+            itemMatrices[i] = makeComparisonMatrix(items, question.getPairs(), items.size());
+        }
+        double[][] categoryMatrix = makeComparisonMatrix(categories, deciderQuestionnaire.getCategoryQuestions(), categories.size());
+        return new AlgorithmInput(new ArrayList<>(items.keySet()),new ArrayList<>(categories.keySet()), categoryMatrix ,itemMatrices);
     }
     private JSONObject executePython(String input) {
         try {
@@ -118,11 +96,10 @@ public class DeciderService {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder output = new StringBuilder();
-            String line = "jd";
+            String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line);
             }
-
             return new JSONObject(output.toString());
         } catch (Exception e) {
             e.printStackTrace();
