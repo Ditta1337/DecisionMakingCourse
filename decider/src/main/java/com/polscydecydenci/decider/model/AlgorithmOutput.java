@@ -1,8 +1,10 @@
 package com.polscydecydenci.decider.model;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+
 @Setter
 @Getter
 public class AlgorithmOutput {

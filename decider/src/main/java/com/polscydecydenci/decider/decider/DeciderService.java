@@ -23,22 +23,23 @@ public class DeciderService {
         int categoriesSize = categories.size();
         List<DeciderQuestion> itemQuestions = new ArrayList<>();
         List<Pair> pairList = new ArrayList<>();
-        for(int i = 0;i < itemsSize - 1;i++){
-            for(int j = i + 1; j < itemsSize;j++){
+        for (int i = 0; i < itemsSize - 1; i++) {
+            for (int j = i + 1; j < itemsSize; j++) {
                 pairList.add(new Pair(items.get(i), items.get(j), .0));
             }
         }
-        for(String category: categories) {
+        for (String category : categories) {
             itemQuestions.add(new DeciderQuestion(category, pairList));
         }
         List<Pair> categoryQuestions = new ArrayList<>();
-        for(int i = 0;i < categoriesSize - 1;i++){
-            for(int j = i + 1;j < categoriesSize;j++){
+        for (int i = 0; i < categoriesSize - 1; i++) {
+            for (int j = i + 1; j < categoriesSize; j++) {
                 categoryQuestions.add(new Pair(categories.get(i), categories.get(j), .0));
             }
         }
         return new DeciderQuestionnaire(itemQuestions, categoryQuestions);
     }
+
     public AlgorithmOutput checkAnswersList(DeciderQuestionnaire deciderQuestionnaire) {
         HashMap<String, Integer> items = makeNameToIntegerMap(deciderQuestionnaire.getItemQuestions().getFirst().getPairs());
         HashMap<String, Integer> categories = makeNameToIntegerMap(deciderQuestionnaire.getCategoryQuestions());
@@ -49,40 +50,44 @@ public class DeciderService {
         AlgorithmOutputFormatter.fillAlgoritmOutput(algorithmOutput, jsonAlgorithmOutput, items, categories);
         return algorithmOutput;
     }
-    private HashMap<String, Integer> makeNameToIntegerMap(List<Pair> pairs){
-        HashMap<String,Integer> map = new HashMap<>();
+
+    private HashMap<String, Integer> makeNameToIntegerMap(List<Pair> pairs) {
+        HashMap<String, Integer> map = new HashMap<>();
         map.put(pairs.getFirst().getItem1(), 0);
         int i = 1;
-        for(Pair pair: pairs){
-            if(map.containsKey(pair.getItem2())){
+        for (Pair pair : pairs) {
+            if (map.containsKey(pair.getItem2())) {
                 break;
-            } else{
+            } else {
                 map.put(pair.getItem2(), i++);
             }
         }
         return map;
     }
-    private double[][] makeComparisonMatrix(HashMap<String, Integer> map, List<Pair> pairs, int size){
+
+    private double[][] makeComparisonMatrix(HashMap<String, Integer> map, List<Pair> pairs, int size) {
         double[][] matrix = new double[size][size];
-        for(int i = 0;i < size;i++){
+        for (int i = 0; i < size; i++) {
             matrix[i][i] = 1;
         }
-        for(Pair pair: pairs){
+        for (Pair pair : pairs) {
             int item1Number = map.get(pair.getItem1()), item2Number = map.get(pair.getItem2());
             matrix[item1Number][item2Number] = pair.getDecider();
-            matrix[item2Number][item1Number] = 1/pair.getDecider();
+            matrix[item2Number][item1Number] = 1 / pair.getDecider();
         }
         return matrix;
     }
-    private AlgorithmInput makeAlgorithmInput(HashMap<String, Integer> items, HashMap<String, Integer> categories, DeciderQuestionnaire deciderQuestionnaire){
+
+    private AlgorithmInput makeAlgorithmInput(HashMap<String, Integer> items, HashMap<String, Integer> categories, DeciderQuestionnaire deciderQuestionnaire) {
         double[][][] itemMatrices = new double[categories.size()][items.size()][items.size()];
-        for(int i = 0;i < categories.size();i++){
+        for (int i = 0; i < categories.size(); i++) {
             DeciderQuestion question = deciderQuestionnaire.getItemQuestions().get(i);
             itemMatrices[i] = makeComparisonMatrix(items, question.getPairs(), items.size());
         }
         double[][] categoryMatrix = makeComparisonMatrix(categories, deciderQuestionnaire.getCategoryQuestions(), categories.size());
-        return new AlgorithmInput(new ArrayList<>(items.keySet()),new ArrayList<>(categories.keySet()), categoryMatrix ,itemMatrices);
+        return new AlgorithmInput(new ArrayList<>(items.keySet()), new ArrayList<>(categories.keySet()), categoryMatrix, itemMatrices);
     }
+
     private JSONObject executePython(String input) {
         try {
             File file = new File("/app/scripts/deciderAlgorithm.py");

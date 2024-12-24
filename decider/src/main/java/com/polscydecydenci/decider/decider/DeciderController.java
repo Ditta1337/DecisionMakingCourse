@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/decider")
 public class DeciderController {
     private final DeciderService deciderService;
+
     @PostMapping("/configuration")
-    public DeciderQuestionnaire receiveAndReturnDeciderConfiguration(@RequestBody DeciderConfiguration deciderConfiguration){
+    public DeciderQuestionnaire receiveAndReturnDeciderConfiguration(@RequestBody DeciderConfiguration deciderConfiguration) {
         return deciderService.createQuestionList(deciderConfiguration);
     }
+
     @PostMapping("/answers")
-    public AlgorithmOutput receiveAndReturnDeciderAnswers(@RequestBody DeciderQuestionnaire deciderQuestionnaire){
+    public AlgorithmOutput receiveAndReturnDeciderAnswers(@RequestBody DeciderQuestionnaire deciderQuestionnaire) {
         return deciderService.checkAnswersList(deciderQuestionnaire);
     }
 }

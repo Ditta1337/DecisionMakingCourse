@@ -16,7 +16,7 @@ public class AlgorithmInput {
     private double[][] criteriaComparison;
     private double[][][] alternativesComparison;
 
-    public String toJson(){
+    public String toJson() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(this);
